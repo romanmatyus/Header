@@ -1,0 +1,3 @@
+
+var ApiGen = ApiGen || {};
+ApiGen.elements = [["c","RM\\AssetsCollector"],["c","RM\\AssetsCollector\\AssetsCollectorExtension"],["c","RM\\AssetsCollector\\Compilers\\BaseAssetsCompiler"],["c","RM\\AssetsCollector\\Compilers\\BaseCssAssetsCompiler"],["c","RM\\AssetsCollector\\Compilers\\BaseJsAssetsCompiler"],["c","RM\\AssetsCollector\\Compilers\\CssSimpleMinificator"],["c","RM\\AssetsCollector\\Compilers\\IAssetsCompiler"],["c","RM\\AssetsCollector\\Compilers\\ImageReplacer"],["c","RM\\AssetsCollector\\Compilers\\ImageToDataStream"],["c","RM\\AssetsCollector\\JsCssMacros"],["c","RM\\AssetsCollector\\Package"],["c","RM\\Header"]];
