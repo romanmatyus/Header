@@ -99,7 +99,7 @@ Installation
 
 3) Register
 
-    \RM\PublicFileCollectorExtension::register($configurator);
+    \RM\AssetsCollector\AssetsCollectorExtension::register($configurator);
 
 4) Create component Header https://github.com/romanmatyus/Header
 

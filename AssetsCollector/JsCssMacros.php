@@ -22,7 +22,7 @@ class JsCssMacros extends MacroSet
 		$macroSet = new static($compiler);
 		$macroSet->addMacro('css', '$presenter->context->assetsCollector->collector->addCss(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
 		$macroSet->addMacro('js', '$presenter->context->assetsCollector->collector->addJs(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('pfpack', '$presenter->context->assetsCollector->collector->addPackages(%node.array)');
+		$macroSet->addMacro('assets', '$presenter->context->assetsCollector->collector->addPackages(%node.array)');
 		$macroSet->addMacro('cssContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->context->assetsCollector->collector->addCssContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
 		$macroSet->addMacro('jsContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->context->assetsCollector->collector->addJsContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
 	}
