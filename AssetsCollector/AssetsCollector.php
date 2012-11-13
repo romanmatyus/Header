@@ -300,8 +300,9 @@ class AssetsCollector extends Object
 	 */
 	private function compileJs($content,$dir=null)
 	{
-		foreach ($this->jsCompiler as $compiler) {
-			$content = $compiler($content,$dir);
+		foreach ($this->jsCompiler as $name => $compiler) {
+			if (in_array($name,$this->enabledCompilers))
+				$content = $compiler($content,$dir);
 		}
 		return $content;
 	}
