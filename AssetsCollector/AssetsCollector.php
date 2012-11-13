@@ -175,10 +175,11 @@ class AssetsCollector extends Object
     private function getTempFromFile($source,$type)
 	{
 		$content = file_get_contents($source);
+		$md5 = md5($content);
+		
 		$compile_function = 'compile'.$type;
 		$content = $this->$compile_function($content,dirname($source));
 
-		$md5 = md5($content);
 		$filename = explode("/",self::addToFileName($source,$md5));
 		$fileNameOutput = array_pop($filename);
 		if (!file_exists($this->webTemp."/".$fileNameOutput))
@@ -202,12 +203,12 @@ class AssetsCollector extends Object
 	{
 		if (strlen($content)===0)
 			throw new InvalidArgumentException("Content of generated file can not be empty.");
-
+		$md5 = md5($content);
+		
 		// run compilers
 		$compile_function = 'compile'.$type;
 		$content = $this->$compile_function($content,$dir);
 
-		$md5 = md5($content);
 		$fileNameOutput = $md5.".".$type;
 		if (!file_exists($this->webTemp."/".$fileNameOutput))
 			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
