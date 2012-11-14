@@ -177,13 +177,15 @@ class AssetsCollector extends Object
 		$content = file_get_contents($source);
 		$md5 = md5($content);
 		
-		$compile_function = 'compile'.$type;
-		$content = $this->$compile_function($content,dirname($source));
-
 		$filename = explode("/",self::addToFileName($source,$md5));
 		$fileNameOutput = array_pop($filename);
-		if (!file_exists($this->webTemp."/".$fileNameOutput))
+		
+		if (!file_exists($this->webTemp."/".$fileNameOutput)) {
+			// run compilers
+			$compile_function = 'compile'.$type;
+			$content = $this->$compile_function($content,dirname($source));
 			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
+		}
 
 		// Remove all old versions
 		$this->removeAllOldFiles($source, $fileNameOutput);
@@ -205,13 +207,13 @@ class AssetsCollector extends Object
 			throw new InvalidArgumentException("Content of generated file can not be empty.");
 		$md5 = md5($content);
 		
-		// run compilers
-		$compile_function = 'compile'.$type;
-		$content = $this->$compile_function($content,$dir);
-
 		$fileNameOutput = $md5.".".$type;
-		if (!file_exists($this->webTemp."/".$fileNameOutput))
+		if (!file_exists($this->webTemp."/".$fileNameOutput)) {
+			// run compilers
+			$compile_function = 'compile'.$type;
+			$content = $this->$compile_function($content,$dir);
 			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
+		}
 
 		// return real path
 		return substr($this->webTemp,strlen(WWW_DIR))."/".$fileNameOutput;
@@ -286,6 +288,7 @@ class AssetsCollector extends Object
 	 */
 	private function compileCss($content,$dir=null)
 	{
+		\Nette\diagnostics\Debugger::bardump("css compile");
 		foreach ($this->cssCompiler as $name => $compiler) {
 			if (in_array($name,$this->enabledCompilers))
 				$content = $compiler($content,$dir);
