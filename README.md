@@ -116,3 +116,13 @@ Installation
 
 6) Use it:)
 
+Roadmap
+-------
+FIX ->setAssetsCollector($this->context->assetsCollector->collector) in documentation. Issue #2
+Add description for creating component header to documentation. Issue #3
+Call compilers by order in variable `enabledCompilers`. Issue #1
+Add macros for changing meta information from templates. Issue #4
+2012-11-14		FIX Lazy compile
+2012-11-13		Lazy compile
+2012-11-13		FIX enabledCompilers for JS
+2012-11-12	BC!	Change name of macro `pfpack` to `pack`
