@@ -12,5 +12,8 @@
 	"require": {
 		"php" : ">=5.3.2",
 		"nette/nette": ">=2.0.5"
+	},
+	"autoload": {
+		"classmap": ["AssetsCollector/", "Header.php"]
 	}
 }
