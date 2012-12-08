@@ -1,4 +1,4 @@
-<?
+<?php
 namespace RM\AssetsCollector\Compilers;
 
 /**
