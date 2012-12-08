@@ -21,20 +21,20 @@ class AssetsCollector extends Object
 	/** File type */
 	const JS = "js";
 
-    /** @var array of attached css files */
-    protected $css = array();
+	/** @var array of attached css files */
+	protected $css = array();
 
-    /** @var string base path for css files */
-    public $cssPath;
+	/** @var string base path for css files */
+	public $cssPath;
 
-    /** @var array of attached js files */
-    protected $js = array();
+	/** @var array of attached js files */
+	protected $js = array();
 
-    /** @var string base path for js files */
-    public $jsPath;
+	/** @var string base path for js files */
+	public $jsPath;
 
-    /** @var string path for temporary folder */
-    public $webTemp;
+	/** @var string path for temporary folder */
+	public $webTemp;
 
 	/** @var boolean remove all old files? */
 	public $removeOld;
@@ -172,7 +172,7 @@ class AssetsCollector extends Object
 	 * @param	type string type of files self::CSS or self::JS
 	 * @return	filename with complete path in temporary directory
 	 */
-    private function getTempFromFile($source,$type)
+	private function getTempFromFile($source,$type)
 	{
 		$content = file_get_contents($source);
 		$md5 = md5($content);
@@ -201,7 +201,7 @@ class AssetsCollector extends Object
 	 * @param	type string type of files self::CSS or self::JS
 	 * @return filename with complete path in temporary directory
 	 */
-    private function getTempFromContent($content,$dir=null,$type)
+	private function getTempFromContent($content,$dir=null,$type)
 	{
 		if (strlen($content)===0)
 			throw new InvalidArgumentException("Content of generated file can not be empty.");

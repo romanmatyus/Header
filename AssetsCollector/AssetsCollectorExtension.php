@@ -18,9 +18,9 @@ class AssetsCollectorExtension extends CompilerExtension
 	/**
 	 * Method setings extension.
 	 */
-    public function loadConfiguration()
-    {
-        $builder = $this->getContainerBuilder();
+	public function loadConfiguration()
+	{
+		$builder = $this->getContainerBuilder();
 
 		$config = $this->getConfig(array(
 			'cssPath' => WWW_DIR.'/style/css',
@@ -40,16 +40,16 @@ class AssetsCollectorExtension extends CompilerExtension
 		));
 
 		$builder->addDefinition($this->prefix('cssSimpleMinificator'))
-            ->setClass('\RM\AssetsCollector\Compilers\CssSimpleMinificator');
+			->setClass('\RM\AssetsCollector\Compilers\CssSimpleMinificator');
 
 		$builder->addDefinition($this->prefix('imageToDataStream'))
-            ->setClass('\RM\AssetsCollector\Compilers\ImageToDataStream')
+			->setClass('\RM\AssetsCollector\Compilers\ImageToDataStream')
 			->addSetup('$cssPath', $config['cssPath'])
 			->addSetup('$wwwDir', $config['wwwDir'])
 			->addSetup('$maxSize', $config['maxSize']);
 
 		$builder->addDefinition($this->prefix('imageReplacer'))
-            ->setClass('\RM\AssetsCollector\Compilers\ImageReplacer')
+			->setClass('\RM\AssetsCollector\Compilers\ImageReplacer')
 			->addSetup('$cssPath', $config['cssPath'])
 			->addSetup('$wwwDir', $config['wwwDir'])
 			->addSetup('$webTemp', $config['webTemp']);
@@ -63,7 +63,7 @@ class AssetsCollectorExtension extends CompilerExtension
 		));
 
 		$builder->addDefinition($this->prefix('collector'))
-            ->setClass('\RM\AssetsCollector')
+			->setClass('\RM\AssetsCollector')
 			->addSetup('$cssPath', $config['cssPath'])
 			->addSetup('$jsPath', $config['jsPath'])
 			->addSetup('$webTemp', $config['webTemp'])
@@ -80,7 +80,7 @@ class AssetsCollectorExtension extends CompilerExtension
 
 		$builder->getDefinition('nette.latte')
 			->addSetup('\RM\AssetsCollector\JsCssMacros::install(?->compiler)', array('@self'));
-    }
+	}
 
 	/**
 	 * Register AssetsCollector to application.
