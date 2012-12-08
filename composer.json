@@ -14,6 +14,6 @@
 		"nette/nette": ">=2.0.5"
 	},
 	"autoload": {
-		"classmap": ["AssetsCollector/", "AssetsCollector/Compilators/", "Header.php"]
+		"classmap": ["AssetsCollector/", "AssetsCollector/Compilers/", "Header.php"]
 	}
 }
