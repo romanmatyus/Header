@@ -269,10 +269,10 @@ class Header extends Control
 
 	public function setFavicon($filename)
 	{
-		if (file_exists(WWW_DIR . '/' . $filename)) {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $filename)) {
 			$this->favicon = $filename;
 		} else {
-			throw new FileNotFoundException('Favicon ' . WWW_DIR . $filename . ' not found.');
+			throw new FileNotFoundException('Favicon ' . $_SERVER['DOCUMENT_ROOT'] . $filename . ' not found.');
 		}
 
 		return $this; //fluent interface

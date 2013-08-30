@@ -142,8 +142,8 @@ class AssetsCollector extends Object
 	{
 		if (!empty($dirs))
 			foreach ($dirs as $dir)
-				if (file_exists($dir."/".$filename))
-					return realpath($dir."/".$filename);
+				if (file_exists($dir.DIRECTORY_SEPARATOR.$filename))
+					return realpath($dir.DIRECTORY_SEPARATOR.$filename);
 		if (file_exists($filename))
 			return realpath($filename);
 		throw new FileNotFoundException("File '" . $filename . "' not found.");
@@ -157,13 +157,13 @@ class AssetsCollector extends Object
 	 */
 	private function addToFileName($filename,$string)
 	{
-		$path = explode("/",$filename);
+		$path = explode(DIRECTORY_SEPARATOR,$filename);
 		$filename = array_pop($path);
 		$filename = explode(".",$filename);
 		$extension = array_pop($filename);
 		$filename[] = $string;
 		$filename = implode(".",$filename).".".$extension;
-		return implode("/",$path)."/".$filename;
+		return implode(DIRECTORY_SEPARATOR,$path).DIRECTORY_SEPARATOR.$filename;
 	}
 
 	/**
@@ -177,21 +177,21 @@ class AssetsCollector extends Object
 		$content = file_get_contents($source);
 		$md5 = md5($content);
 		
-		$filename = explode("/",self::addToFileName($source,$md5));
+		$filename = explode(DIRECTORY_SEPARATOR,self::addToFileName($source,$md5));
 		$fileNameOutput = array_pop($filename);
 		
-		if (!file_exists($this->webTemp."/".$fileNameOutput)) {
+		if (!file_exists($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput)) {
 			// run compilers
 			$compile_function = 'compile'.$type;
 			$content = $this->$compile_function($content,dirname($source));
-			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
+			file_put_contents($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput,$content);
 		}
 
 		// Remove all old versions
 		$this->removeAllOldFiles($source, $fileNameOutput);
 
 		// return real path
-		return substr($this->webTemp,strlen(WWW_DIR))."/".$fileNameOutput;
+		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 
 	/**
@@ -208,15 +208,15 @@ class AssetsCollector extends Object
 		$md5 = md5($content);
 		
 		$fileNameOutput = $md5.".".$type;
-		if (!file_exists($this->webTemp."/".$fileNameOutput)) {
+		if (!file_exists($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput)) {
 			// run compilers
 			$compile_function = 'compile'.$type;
 			$content = $this->$compile_function($content,$dir);
-			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
+			file_put_contents($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput,$content);
 		}
 
 		// return real path
-		return substr($this->webTemp,strlen(WWW_DIR))."/".$fileNameOutput;
+		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 
 	/**
@@ -257,7 +257,7 @@ class AssetsCollector extends Object
 	private function removeAllOldFiles($source, $fileNameOutput)
 	{
 		if ($this->removeOld) {
-			$d = explode("/",$source);
+			$d = explode(DIRECTORY_SEPARATOR,$source);
 			$f = explode(".",array_pop($d));
 			$ext = array_pop($f);
 			foreach (Finder::findFiles(implode(".",$f).'*.'.$ext)
@@ -444,13 +444,13 @@ class AssetsCollector extends Object
 		$content = "";
 
 		foreach ($files as $file)
-			$content .= file_get_contents(WWW_DIR.$file);
+			$content .= file_get_contents($_SERVER['DOCUMENT_ROOT'].$file);
 
 		$fileNameOutput = md5($content).".".$type;
 
-		if (!file_exists($this->webTemp."/".$fileNameOutput))
-			file_put_contents($this->webTemp."/".$fileNameOutput,$content);
+		if (!file_exists($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput))
+			file_put_contents($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput,$content);
 
-		return substr($this->webTemp,strlen(WWW_DIR))."/".$fileNameOutput;
+		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 }

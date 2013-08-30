@@ -21,12 +21,11 @@ class AssetsCollectorExtension extends CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-
 		$config = $this->getConfig(array(
-			'cssPath' => WWW_DIR.'/style/css',
-			'jsPath' => WWW_DIR.'/style/js',
-			'webTemp' => WWW_DIR.'/webtemp',
-			'wwwDir' => WWW_DIR,
+			'cssPath' => $_SERVER['DOCUMENT_ROOT'].'/css',
+			'jsPath' => $_SERVER['DOCUMENT_ROOT'].'/js',
+			'webTemp' => $_SERVER['DOCUMENT_ROOT'].'/webtemp',
+			'wwwDir' => $_SERVER['DOCUMENT_ROOT'],
 			'maxSize' => 1024,
 			'packages' => array(),
 			'addCss' => array(),
@@ -84,7 +83,7 @@ class AssetsCollectorExtension extends CompilerExtension
 
 	/**
 	 * Register AssetsCollector to application.
-	 * @param \Nette\Config\Configurator $config
+	 * @param \Nette\DI\Configurator $config
 	 */
 	public static function register(Configurator $config)
 	{
