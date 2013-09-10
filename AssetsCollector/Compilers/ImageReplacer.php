@@ -34,7 +34,7 @@ class ImageReplacer extends BaseCssAssetsCompiler implements IAssetsCompiler
 					$output_file = $this->webTemp."/".$hash.".".$ext;
 					if (!file_exists($output_file))
 						copy($source_file,$output_file);
-					$this->output = str_replace($img,substr($output_file,strlen(WWW_DIR)),$this->output);
+					$this->output = str_replace($img,substr($output_file,strlen($this->wwwDir)),$this->output);
 				}
 			}
 		}
