@@ -488,9 +488,14 @@ class Header extends Control
 		}
 
 		foreach ($this->rssChannels as $channel) {
-			echo Html::el('link')->rel('alternate')->type('application/rss+xml')
+			if (is_string($channel['link']))
+				echo Html::el('link')->rel('alternate')->type('application/rss+xml')
 					->title($channel['title'])
 					->href(Environment::getApplication()->getPresenter()->link($channel['link'])) . "\n";
+			elseif (is_array($channel['link']))
+				echo Html::el('link')->rel('alternate')->type('application/rss+xml')
+					->title($channel['title'])
+					->href(Environment::getApplication()->getPresenter()->link($channel['link'][0], $channel['link'][1])) . "\n";
 		}
 	}
 
