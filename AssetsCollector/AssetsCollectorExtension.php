@@ -66,6 +66,7 @@ class AssetsCollectorExtension extends CompilerExtension
 			->addSetup('$cssPath', $config['cssPath'])
 			->addSetup('$jsPath', $config['jsPath'])
 			->addSetup('$webTemp', $config['webTemp'])
+			->addSetup('$wwwDir', $config['wwwDir'])
 			->addSetup('$removeOld', $config['removeOld'])
 			->addSetup('setPackages', array($config['packages']))
 			->addSetup('addPackages', array($config['addPackage']))

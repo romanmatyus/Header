@@ -36,6 +36,9 @@ class AssetsCollector extends Object
 	/** @var string path for temporary folder */
 	public $webTemp;
 
+	/** @var string path for base www folder */
+	public $wwwDir;
+
 	/** @var boolean remove all old files? */
 	public $removeOld;
 
@@ -191,7 +194,7 @@ class AssetsCollector extends Object
 		$this->removeAllOldFiles($source, $fileNameOutput);
 
 		// return real path
-		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 
 	/**
@@ -216,7 +219,7 @@ class AssetsCollector extends Object
 		}
 
 		// return real path
-		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 
 	/**
@@ -451,6 +454,6 @@ class AssetsCollector extends Object
 		if (!file_exists($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput))
 			file_put_contents($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput,$content);
 
-		return substr($this->webTemp,strlen($_SERVER['DOCUMENT_ROOT'])).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
 	}
 }
