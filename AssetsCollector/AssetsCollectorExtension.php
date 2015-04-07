@@ -43,15 +43,15 @@ class AssetsCollectorExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('imageToDataStream'))
 			->setClass('\RM\AssetsCollector\Compilers\ImageToDataStream')
-			->addSetup('$cssPath', $config['cssPath'])
-			->addSetup('$wwwDir', $config['wwwDir'])
-			->addSetup('$maxSize', $config['maxSize']);
+			->addSetup('$cssPath', array($config['cssPath']))
+			->addSetup('$wwwDir', array($config['wwwDir']))
+			->addSetup('$maxSize', array($config['maxSize']));
 
 		$builder->addDefinition($this->prefix('imageReplacer'))
 			->setClass('\RM\AssetsCollector\Compilers\ImageReplacer')
-			->addSetup('$cssPath', $config['cssPath'])
-			->addSetup('$wwwDir', $config['wwwDir'])
-			->addSetup('$webTemp', $config['webTemp']);
+			->addSetup('$cssPath', array($config['cssPath']))
+			->addSetup('$wwwDir', array($config['wwwDir']))
+			->addSetup('$webTemp', array($config['webTemp']));
 
 		$config = array_merge($config,array(
 			'addCssCompiler' => array(
@@ -63,11 +63,11 @@ class AssetsCollectorExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('collector'))
 			->setClass('\RM\AssetsCollector')
-			->addSetup('$cssPath', $config['cssPath'])
-			->addSetup('$jsPath', $config['jsPath'])
-			->addSetup('$webTemp', $config['webTemp'])
-			->addSetup('$wwwDir', $config['wwwDir'])
-			->addSetup('$removeOld', $config['removeOld'])
+			->addSetup('$cssPath', array($config['cssPath']))
+			->addSetup('$jsPath', array($config['jsPath']))
+			->addSetup('$webTemp', array($config['webTemp']))
+			->addSetup('$wwwDir', array($config['wwwDir']))
+			->addSetup('$removeOld', array($config['removeOld']))
 			->addSetup('setPackages', array($config['packages']))
 			->addSetup('addPackages', array($config['addPackage']))
 			->addSetup('addCssCompiler', array($config['addCssCompiler']))
