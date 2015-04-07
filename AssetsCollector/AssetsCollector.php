@@ -1,10 +1,11 @@
 <?php
 namespace RM;
 
-use Nette\Object,
-	Nette\FileNotFoundException,
-	Nette\InvalidArgumentException,
-	Nette\Utils\Finder;
+use Nette\Object;
+use Nette\FileNotFoundException;
+use Nette\InvalidArgumentException;
+use Nette\Utils\Finder;
+use Nette\Utils\Validators;
 
 /**
  * Class for collecting CSS and JS files in PHP framework Nette.
@@ -149,6 +150,10 @@ class AssetsCollector extends Object
 					return realpath($dir.DIRECTORY_SEPARATOR.$filename);
 		if (file_exists($filename))
 			return realpath($filename);
+		if (Validators::isUrl($filename))
+			return $filename;
+		if (substr($filename, 0, 2) === '//')
+			return 'http://' . substr($filename, 2);
 		throw new FileNotFoundException("File '" . $filename . "' not found.");
 	}
 
@@ -291,7 +296,6 @@ class AssetsCollector extends Object
 	 */
 	private function compileCss($content,$dir=null)
 	{
-		\Nette\diagnostics\Debugger::bardump("css compile");
 		foreach ($this->cssCompiler as $name => $compiler) {
 			if (in_array($name,$this->enabledCompilers))
 				$content = $compiler($content,$dir);
