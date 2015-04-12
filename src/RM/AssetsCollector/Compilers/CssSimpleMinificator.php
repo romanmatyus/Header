@@ -13,10 +13,10 @@ class CssSimpleMinificator extends BaseCssAssetsCompiler implements IAssetsCompi
 {
 	/**
 	 * Get compiled content.
-	 * @param	input string
-	 * @return	output string
+	 * @param  input string
+	 * @return string
 	 */
-	public function compile($input,$dir=null)
+	public function compile($input, $dir=null)
 	{
 		$this->input = $this->output = $input;
 
