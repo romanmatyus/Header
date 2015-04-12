@@ -26,10 +26,10 @@ class Package extends Object
 
 	/**
 	 * Define package.
-	 * @param	name string name of package
-	 * @param	extends null|array of packages where this package extends
-	 * @param	css null|array of included CSS files
-	 * @param	js null|array of included JS files
+	 * @param string     $name    Name of package
+	 * @param array|null $extends Array of packages where this package extends
+	 * @param array|null $css     Array of included CSS files
+	 * @param array|null $js      Array of included JS files
 	 */
 	public function __construct($name, array $extends = null, array $css = null, array $js = null)
 	{

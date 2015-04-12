@@ -17,10 +17,11 @@ class ImageReplacer extends BaseCssAssetsCompiler implements IAssetsCompiler
 {
 	/**
 	 * Get compiled content.
-	 * @param	input string
-	 * @return	output string
+	 * @param  string $input
+	 * @param  string $dir
+	 * @return string
 	 */
-	public function compile($input,$dir=null)
+	public function compile($input, $dir = NULL)
 	{
 		$this->checkRequirements();
 		$this->input = $this->output = $input;
