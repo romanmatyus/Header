@@ -20,10 +20,10 @@ class JsCssMacros extends MacroSet
 	public static function install(Compiler $compiler)
 	{
 		$macroSet = new static($compiler);
-		$macroSet->addMacro('css', '$presenter->getService(\'assetsCollector.collector\')->addCss(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('js', '$presenter->getService(\'assetsCollector.collector\')->addJs(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('pack', '$presenter->getService(\'assetsCollector.collector\')->addPackages(%node.array)');
-		$macroSet->addMacro('cssContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getService(\'assetsCollector.collector\')->addCssContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('jsContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getService(\'assetsCollector.collector\')->addJsContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
+		$macroSet->addMacro('css', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCss(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
+		$macroSet->addMacro('js', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJs(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
+		$macroSet->addMacro('pack', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addPackages(%node.array)');
+		$macroSet->addMacro('cssContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCssContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
+		$macroSet->addMacro('jsContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJsContent($content,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
 	}
 }

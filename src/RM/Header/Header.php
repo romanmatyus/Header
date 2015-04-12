@@ -8,6 +8,7 @@ use Nette\Http\Request;
 use Nette\Http\Response;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
+use RM\AssetsCollector\AssetsCollector;
 
 /**
  * Header

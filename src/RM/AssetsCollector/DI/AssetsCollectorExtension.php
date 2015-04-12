@@ -1,8 +1,10 @@
 <?php
+namespace RM\AssetsCollector;
 
-namespace RM\AssetsCollector\DI;
-
+use Nette\DI\Configurator;
+use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+
 
 /**
  * Class for register extension AssetsCollector.
@@ -77,10 +79,23 @@ class AssetsCollectorExtension extends CompilerExtension
 			->addSetup('checkRequirements');
 
 		$builder->addDefinition($this->prefix('factory'))
-			->setImplement('RM\Header\IHeaderFatory');
+			->setImplement('RM\IHeaderFatory');
 
-		$builder->getDefinition('nette.latte')
-			->addSetup('\RM\AssetsCollector\Latte\JsCssMacros::install(?->compiler)', array('@self'));
+		$self = $this;
+		$registerToLatte = function (Nette\DI\ServiceDefinition $def) use ($self) {
+			$def
+				->addSetup('?->onCompile[] = function($engine) { RM\AssetsCollector\JsCssMacros::install($engine->getCompiler()); }', array('@self'))
+				->addSetup('addFilter', array('translate', array($self->prefix('@helpers'), 'translate')))
+				->addSetup('addFilter', array('getTranslator', array($self->prefix('@helpers'), 'getTranslator')));
+		};
+
+		if ($builder->hasDefinition('nette.latteFactory')) {
+			$registerToLatte($builder->getDefinition('nette.latteFactory'));
+		}
+
+		if ($builder->hasDefinition('nette.latte')) {
+			$registerToLatte($builder->getDefinition('nette.latte'));
+		}
 	}
 
 	/**
