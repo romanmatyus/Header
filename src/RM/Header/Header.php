@@ -91,7 +91,7 @@ class Header extends Control
 	/** @var string path to favicon (without $basePath) */
 	private $favicon;
 
-	/** @var RM\AssetsCollector */
+	/** @var RM\AssetsCollector\AssetsCollector */
 	private $assetsCollector;
 
 	/** @var Nette\Http\Request */
