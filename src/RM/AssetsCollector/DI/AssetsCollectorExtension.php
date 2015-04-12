@@ -1,10 +1,11 @@
 <?php
-namespace RM\AssetsCollector;
+
+namespace RM\AssetsCollector\DI;
 
 use Nette\DI\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
-
+use Nette\DI\ServiceDefinition;
 
 /**
  * Class for register extension AssetsCollector.
@@ -39,16 +40,16 @@ class AssetsCollectorExtension extends CompilerExtension
 		));
 
 		$builder->addDefinition($this->prefix('cssSimpleMinificator'))
-			->setClass('\RM\AssetsCollector\Compilers\CssSimpleMinificator');
+			->setClass('RM\AssetsCollector\Compilers\CssSimpleMinificator');
 
 		$builder->addDefinition($this->prefix('imageToDataStream'))
-			->setClass('\RM\AssetsCollector\Compilers\ImageToDataStream')
+			->setClass('RM\AssetsCollector\Compilers\ImageToDataStream')
 			->addSetup('$cssPath', array($config['cssPath']))
 			->addSetup('$wwwDir', array($config['wwwDir']))
 			->addSetup('$maxSize', array($config['maxSize']));
 
 		$builder->addDefinition($this->prefix('imageReplacer'))
-			->setClass('\RM\AssetsCollector\Compilers\ImageReplacer')
+			->setClass('RM\AssetsCollector\Compilers\ImageReplacer')
 			->addSetup('$cssPath', array($config['cssPath']))
 			->addSetup('$wwwDir', array($config['wwwDir']))
 			->addSetup('$webTemp', array($config['webTemp']));
@@ -62,7 +63,7 @@ class AssetsCollectorExtension extends CompilerExtension
 		));
 
 		$builder->addDefinition($this->prefix('collector'))
-			->setClass('\RM\AssetsCollector')
+			->setClass('RM\AssetsCollector\AssetsCollector')
 			->addSetup('$cssPath', array($config['cssPath']))
 			->addSetup('$jsPath', array($config['jsPath']))
 			->addSetup('$webTemp', array($config['webTemp']))
@@ -79,14 +80,12 @@ class AssetsCollectorExtension extends CompilerExtension
 			->addSetup('checkRequirements');
 
 		$builder->addDefinition($this->prefix('factory'))
-			->setImplement('RM\IHeaderFatory');
+			->setImplement('RM\Header\IHeaderFactory');
 
 		$self = $this;
-		$registerToLatte = function (Nette\DI\ServiceDefinition $def) use ($self) {
+		$registerToLatte = function (ServiceDefinition $def) use ($self) {
 			$def
-				->addSetup('?->onCompile[] = function($engine) { RM\AssetsCollector\JsCssMacros::install($engine->getCompiler()); }', array('@self'))
-				->addSetup('addFilter', array('translate', array($self->prefix('@helpers'), 'translate')))
-				->addSetup('addFilter', array('getTranslator', array($self->prefix('@helpers'), 'getTranslator')));
+				->addSetup('?->onCompile[] = function($engine) { RM\AssetsCollector\Latte\JsCssMacros::install($engine->getCompiler()); }', array('@self'));
 		};
 
 		if ($builder->hasDefinition('nette.latteFactory')) {
