@@ -1,10 +1,8 @@
 <?php
-namespace RM\AssetsCollector;
 
-use \Nette\Config\Configurator,
-	\Nette\Config\Compiler,
-	\Nette\Config\CompilerExtension;
+namespace RM\AssetsCollector\DI;
 
+use Nette\DI\CompilerExtension;
 
 /**
  * Class for register extension AssetsCollector.
@@ -78,8 +76,11 @@ class AssetsCollectorExtension extends CompilerExtension
 			->addSetup('$mergeFiles', array($config['mergeFiles']))
 			->addSetup('checkRequirements');
 
+		$builder->addDefinition($this->prefix('factory'))
+			->setImplement('RM\Header\IHeaderFatory');
+
 		$builder->getDefinition('nette.latte')
-			->addSetup('\RM\AssetsCollector\JsCssMacros::install(?->compiler)', array('@self'));
+			->addSetup('\RM\AssetsCollector\Latte\JsCssMacros::install(?->compiler)', array('@self'));
 	}
 
 	/**

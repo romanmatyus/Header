@@ -1,8 +1,8 @@
 <?php
-namespace RM\AssetsCollector;
+namespace RM\AssetsCollector\Latte;
 
-use Nette\Latte\Macros\MacroSet,
-	Nette\Latte\Compiler;
+use Latte\Macros\MacroSet;
+use Latte\Compiler;
 
 /**
  * Class defined macros for AssetsCollector.

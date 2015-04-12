@@ -1,9 +1,10 @@
 <?php
+
 namespace RM\AssetsCollector\Compilers;
 
-use Nette\FileNotFoundException,
-	Nette\InvalidArgumentException,
-	\RM\AssetsCollector;
+use Nette\FileNotFoundException;
+use Nette\InvalidArgumentException;
+use RM\AssetsCollector;
 
 /**
  * CSS compiler where replace images in content to real images.

@@ -1,5 +1,5 @@
 <?php
-namespace RM;
+namespace RM\AssetsCollector;
 
 use Nette\Object;
 use Nette\FileNotFoundException;

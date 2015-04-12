@@ -1,8 +1,8 @@
 <?php
+
 namespace RM\AssetsCollector\Compilers;
 
-use \Nette\Object,
-	\RM\AssetsCollector;
+use Nette\Object;
 
 /**
  * Base class for CSS/JS file compilers.

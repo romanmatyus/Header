@@ -1,7 +1,7 @@
 <?php
 namespace RM\AssetsCollector;
 
-use \Nette\Object;
+use Nette\Object;
 
 /**
  * Class of Packages for AssetsCollector.

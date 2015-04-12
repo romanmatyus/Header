@@ -1,9 +1,9 @@
 <?php
+
 namespace RM\AssetsCollector\Compilers;
 
-use \Nette\FileNotFoundException,
-	\Nette\Templating\Helpers,
-	\RM\AssetsCollector;
+use Nette\Templating\Helpers;
+use RM\AssetsCollector;
 
 /**
  * CSS compiler where replace images in content to data stream.
@@ -32,7 +32,7 @@ class ImageToDataStream extends BaseCssAssetsCompiler implements IAssetsCompiler
 					$source_file = AssetsCollector::findFile($img,array($dir,$this->cssPath,$this->wwwDir));
 					if (filesize($source_file)<$this->maxSize) {
 						$imgbinary = fread(fopen($source_file, "r"), filesize($source_file));
-						$this->output = str_replace($img,\Nette\Templating\Helpers::dataStream($imgbinary),$this->output);
+						$this->output = str_replace($img, Helpers::dataStream($imgbinary),$this->output);
 					}
 			}
 		}
