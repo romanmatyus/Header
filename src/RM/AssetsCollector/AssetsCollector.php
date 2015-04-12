@@ -394,7 +394,6 @@ class AssetsCollector extends Object
 		if(!empty($dependecies['js']))
 			foreach ($dependecies['js'] as $js)
 				$this->addJs($js);
-		$package = $this->packages[$package];
 	}
 
 	/**
