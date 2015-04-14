@@ -114,6 +114,9 @@ class Header extends Control
 		} catch (FileNotFoundException $e) {}
 	}
 
+	/**
+	 * @param string $docType
+	 */
 	public function setDocType($docType)
 	{
 		if ($docType == self::HTML_4_STRICT || $docType == self::HTML_4_TRANSITIONAL ||
@@ -248,6 +251,9 @@ class Header extends Control
 		return $this->rssChannels;
 	}
 
+	/**
+	 * @param string $contentType
+	 */
 	public function setContentType($contentType, $force = FALSE)
 	{
 		if ($contentType == self::APPLICATION_XHTML &&
@@ -277,6 +283,9 @@ class Header extends Control
 		return $this->forceContentType;
 	}
 
+	/**
+	 * @param string $filename
+	 */
 	public function setFavicon($filename)
 	{
 		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $filename)) {
@@ -293,6 +302,9 @@ class Header extends Control
 		return $this->favicon;
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function setMetaTag($name, $value)
 	{
 		$this->metaTags[$name] = $value;
@@ -300,6 +312,9 @@ class Header extends Control
 		return $this; //fluent interface
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function getMetaTag($name)
 	{
 		return isset($this->metaTags[$name]) ? $this->metaTags[$name] : NULL;
@@ -546,7 +561,7 @@ class Header extends Control
 	 * Add CSS files to header.
 	 * Using \RM\AssetsCollector
 	 * @param file string|array
-	 * @return this
+	 * @return Header
 	 */
 	public function addCss($file)
 	{
@@ -558,7 +573,7 @@ class Header extends Control
 	 * Add JS files to header.
 	 * Using \RM\AssetsCollector
 	 * @param file string|array
-	 * @return this
+	 * @return Header
 	 */
 	public function addJs($file)
 	{
@@ -570,7 +585,7 @@ class Header extends Control
 	 * Add CSS files to header from plain entry.
 	 * Using \RM\AssetsCollector
 	 * @param content string
-	 * @return this
+	 * @return Header
 	 */
 	public function addCssContent($content)
 	{
@@ -582,7 +597,7 @@ class Header extends Control
 	 * Add JS files to header from plain entry.
 	 * Using \RM\AssetsCollector
 	 * @param content string
-	 * @return this
+	 * @return Header
 	 */
 	public function addJsContent($content)
 	{
