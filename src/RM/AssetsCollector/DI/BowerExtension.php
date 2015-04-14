@@ -5,6 +5,7 @@ namespace RM\AssetsCollector\DI;
 use Nette\DI\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Helpers;
 use Nette\Utils\Finder;
 use Nette\Utils\Json;
 use Nette\InvalidArgumentException;
@@ -23,66 +24,96 @@ class BowerExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$config = $this->getConfig(array(
-			'bowerFile' => $builder->expand('%appDir%') . '/../bower.json',
+			'bowerFile' => Helpers::expand('%appDir%', $builder->parameters) . '/../bower.json',
 		));
 
-		$checkDir = function ($dir) {
-			if (!is_dir($dir))
-				throw new InvalidArgumentException("Path '$dir' is not directory.");
-			if (!is_readable($dir))
-				throw new InvalidArgumentException("Path '$dir' is not readable.");
-			return TRUE;
-		};
-
 		if (isset($config['bowerFile'])) {
-			$bowerJson = Json::decode(file_get_contents($config['bowerFile']));
 
-			$bowerDirs = array();
-			if (isset($bowerJson->directory)) {
-				$bowerDirs = array(
-					$bowerJson->directory,
-					pathinfo($config['bowerFile'], PATHINFO_DIRNAME) . '/' . $bowerJson->directory,
-				);
-			}
-			$bowerDirs[] = $builder->expand('%appDir%') . '/../bower_components';
+			$bowerDir = $this->getBowerDir($config['bowerFile']);
+			$packages = $this->getPackages($bowerDir);
 
-			$separateCss = function($s) {
-				return (substr($s, -4) === '.css');
-			};
-			$separateJs = function($s) {
-				return (substr($s, -3) === '.js');
-			};
+			foreach ($builder->findByType('RM\AssetsCollector\AssetsCollector') as $def)
+				$def->addSetup('setPackages', array($packages));
 
-			foreach ($bowerDirs as $bowerDir) {
-				if ($checkDir($bowerDir)) {
-
-					$packages = array();
-					foreach (Finder::findFiles('bower.json')->from($bowerDir) as $path => $file) {
-						$componentJson = Json::decode(file_get_contents($path));
-
-						$fullPath = function($s) use ($path) {
-							return pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . $s;
-						};
-						
-						$packages[$componentJson->name] = array_filter(
-							array(
-								"css" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateCss)),
-								"js" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateJs)),
-								"extends" => array_values(array_flip(@(array)$componentJson->dependencies)),
-							), function ($a) {
-								return (!empty($a));
-							}
-						);
-					}
-					break;
-				}
-			}
-		}
-
-		foreach ($builder->findByType('RM\AssetsCollector\AssetsCollector') as $def) {
-			$def->addSetup('setPackages', array($packages));
 		}
 	}
+
+
+	/**
+	 * Get array with packages description
+	 * @param  string $bowerDir
+	 * @return array
+	 */
+	protected function getPackages($bowerDir)
+	{
+		$separateCss = function($s) {
+			return (substr($s, -4) === '.css');
+		};
+		$separateJs = function($s) {
+			return (substr($s, -3) === '.js');
+		};
+
+		$packages = array();
+		foreach (Finder::findFiles('bower.json')->from($bowerDir) as $path => $file) {
+			$componentJson = Json::decode(file_get_contents($path));
+
+			$fullPath = function($s) use ($path) {
+				return pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . $s;
+			};
+
+			$packages[$componentJson->name] = array_filter(
+				array(
+					"css" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateCss)),
+					"js" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateJs)),
+					"extends" => array_values(array_flip(@(array)$componentJson->dependencies)),
+				), function ($a) {
+					return (!empty($a));
+				}
+			);
+		}
+		return $packages;
+	}
+
+
+	/**
+	 * Get dir with Bower components.
+	 * @param  string $bowerFilePath
+	 * @return string
+	 */
+	protected function getBowerDir($bowerFilePath)
+	{
+		$builder = $this->getContainerBuilder();
+		$bowerJson = Json::decode(file_get_contents($bowerFilePath));
+
+		$bowerDirs = array();
+		if (isset($bowerJson->directory)) {
+			$bowerDirs = array(
+				$bowerJson->directory,
+				pathinfo($config['bowerFile'], PATHINFO_DIRNAME) . '/' . $bowerJson->directory,
+			);
+		}
+		$bowerDirs[] = Helpers::expand('%appDir%', $builder->parameters) . '/../bower_components';
+
+		foreach ($bowerDirs as $bowerDir)
+			if ($this->checkDir($bowerDir))
+				return $bowerDir;
+	}
+
+
+	/**
+	 * Check dir validity.
+	 * @param  string $dir
+	 * @return bool
+	 */
+	protected function checkDir($dir)
+	{
+		if (!is_dir($dir))
+			throw new InvalidArgumentException("Path '$dir' is not directory.");
+		if (!is_readable($dir))
+			throw new InvalidArgumentException("Path '$dir' is not readable.");
+		return TRUE;
+	}
+
 
 	/**
 	 * Register Bower packages in to AssetsCollector.
