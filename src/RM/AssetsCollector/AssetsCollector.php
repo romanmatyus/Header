@@ -403,6 +403,9 @@ class AssetsCollector extends Object
 	 */
 	public function getDependecies($package)
 	{
+		if (!isset($this->packages[$package]))
+			throw new MissingPackageException("The package '$package' is missing.");
+			
 		$dependencies = array("css"=>array(),"js"=>array());
 		$package = $this->packages[$package];
 		if(!empty($package->extends))
