@@ -89,7 +89,7 @@ class BowerExtension extends CompilerExtension
 		if (isset($bowerJson->directory)) {
 			$bowerDirs = array(
 				$bowerJson->directory,
-				pathinfo($config['bowerFile'], PATHINFO_DIRNAME) . '/' . $bowerJson->directory,
+				pathinfo($bowerFilePath, PATHINFO_DIRNAME) . '/' . $bowerJson->directory,
 			);
 		}
 		$bowerDirs[] = Helpers::expand('%appDir%', $builder->parameters) . '/../bower_components';
