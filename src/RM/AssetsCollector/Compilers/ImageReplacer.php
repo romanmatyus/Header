@@ -4,7 +4,7 @@ namespace RM\AssetsCollector\Compilers;
 
 use Nette\FileNotFoundException;
 use Nette\InvalidArgumentException;
-use RM\AssetsCollector;
+use RM\AssetsCollector\AssetsCollector;
 
 /**
  * CSS compiler where replace images in content to real images.
