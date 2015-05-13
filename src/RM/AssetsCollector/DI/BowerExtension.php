@@ -25,6 +25,8 @@ class BowerExtension extends CompilerExtension
 
 		$config = $this->getConfig(array(
 			'bowerFile' => Helpers::expand('%appDir%', $builder->parameters) . '/../bower.json',
+			'netteForms' => TRUE,
+			'netteAjax' => TRUE,
 		));
 
 		if (isset($config['bowerFile'])) {
@@ -32,8 +34,19 @@ class BowerExtension extends CompilerExtension
 			$bowerDir = $this->getBowerDir($config['bowerFile']);
 			$packages = $this->getPackages($bowerDir);
 
-			foreach ($builder->findByType('RM\AssetsCollector\AssetsCollector') as $def)
+			foreach ($builder->findByType('RM\AssetsCollector\AssetsCollector') as $name => $def) {
 				$def->addSetup('setPackages', array($packages));
+				if ($config['netteAjax'] && isset($packages['nette.ajax.js'])) {
+					foreach ($builder->findByTag('nette.form') as $service => $attr) {
+						$builder->getDefinition($service)->addSetup('?->addPackages(\'nette.ajax.js\')', array('@' . $name));
+					}
+				} elseif ($config['netteForms'] && isset($packages['nette-forms'])) {
+					foreach ($builder->findByTag('nette.form') as $service => $attr) {
+						$builder->getDefinition($service)->addSetup('?->addPackages(\'nette.ajax.js\')', array('@' . $name));
+					}
+				}
+				break;
+			}
 
 		}
 	}
@@ -61,7 +74,8 @@ class BowerExtension extends CompilerExtension
 				return pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . $s;
 			};
 
-			$packages[$componentJson->name] = array_filter(
+			$packages[$componentJson->name] =
+			$packages[pathinfo(pathinfo($path, PATHINFO_DIRNAME), PATHINFO_BASENAME)] = array_filter(
 				array(
 					"css" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateCss)),
 					"js" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateJs)),

@@ -25,23 +25,13 @@ class AssetsCollectorExtension extends CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		$packages = array();
-		if (file_exists(__DIR__ . '/../../../../../../nette/forms/src/assets/netteForms.js')) {
-			$packages['netteForms'] = array(
-				'js' => array(
-					__DIR__ . '/../../../../../../nette/forms/src/assets/netteForms.js',
-				)
-			);
-			$this->netteForms = TRUE;
-		}
-
 		$config = $this->getConfig(array(
 			'cssPath' => $_SERVER['DOCUMENT_ROOT'].'/css',
 			'jsPath' => $_SERVER['DOCUMENT_ROOT'].'/js',
 			'webTemp' => $_SERVER['DOCUMENT_ROOT'].'/webtemp',
 			'wwwDir' => $_SERVER['DOCUMENT_ROOT'],
 			'maxSize' => 1024,
-			'packages' => $packages,
+			'packages' => array(),
 			'addCss' => array(),
 			'addJs' => array(),
 			'addPackage' => array(),
@@ -107,16 +97,6 @@ class AssetsCollectorExtension extends CompilerExtension
 
 		if ($builder->hasDefinition('nette.latte')) {
 			$registerToLatte($builder->getDefinition('nette.latte'));
-		}
-	}
-
-	public function beforeCompile()
-	{
-		if ($this->netteForms) {
-			$builder = $this->getContainerBuilder();
-			foreach ($builder->findByType('RM\Application\UI\IFormFactory') as $def) {
-				$def->addSetup('?->addPackages(\'netteForms\')', array('@' . $this->prefix('collector')));
-			}
 		}
 	}
 
