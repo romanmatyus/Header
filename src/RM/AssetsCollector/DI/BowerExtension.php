@@ -35,6 +35,11 @@ class BowerExtension extends CompilerExtension
 			$packages = $this->getPackages($bowerDir);
 
 			foreach ($builder->findByType('RM\AssetsCollector\AssetsCollector') as $name => $def) {
+				foreach ($def->getSetup() as $statement)
+					if (in_array($statement->getEntity(), ['addPackages', 'setPackages']))
+						foreach (array_keys($statement->arguments[0]) as $skipped)
+							unset($packages[$skipped]);
+
 				$def->addSetup('setPackages', array($packages));
 				if ($config['netteAjax'] && isset($packages['nette.ajax.js'])) {
 					foreach ($builder->findByTag('nette.form') as $service => $attr) {
