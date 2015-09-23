@@ -5,6 +5,7 @@ use Nette\Object;
 use Nette\FileNotFoundException;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Finder;
+use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
 /**
@@ -182,6 +183,9 @@ class AssetsCollector extends Object
 	 */
 	private function getTempFromFile($source,$type)
 	{
+		if (Strings::startsWith($source, 'http://'))
+			return $source;
+
 		$content = file_get_contents($source);
 		$md5 = md5($content);
 		
