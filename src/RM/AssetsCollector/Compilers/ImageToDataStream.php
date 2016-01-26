@@ -3,7 +3,7 @@
 namespace RM\AssetsCollector\Compilers;
 
 use Nette\Templating\Helpers;
-use RM\AssetsCollector;
+use RM\AssetsCollector\AssetsCollector;
 
 /**
  * CSS compiler where replace images in content to data stream.
