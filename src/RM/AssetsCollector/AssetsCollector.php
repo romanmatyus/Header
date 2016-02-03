@@ -202,7 +202,7 @@ class AssetsCollector extends Object
 		$this->removeAllOldFiles($source, $fileNameOutput);
 
 		// return real path
-		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return str_replace('\\', '/', substr(realpath($this->webTemp), strlen(realpath($this->wwwDir))) . DIRECTORY_SEPARATOR . $fileNameOutput);
 	}
 
 	/**
@@ -227,7 +227,7 @@ class AssetsCollector extends Object
 		}
 
 		// return real path
-		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return str_replace('\\', '/', substr(realpath($this->webTemp), strlen(realpath($this->wwwDir))) . DIRECTORY_SEPARATOR . $fileNameOutput);
 	}
 
 	/**
