@@ -72,23 +72,29 @@ class BowerExtension extends CompilerExtension
 		};
 
 		$packages = array();
-		foreach (Finder::findFiles('bower.json')->from($bowerDir) as $path => $file) {
-			$componentJson = Json::decode(file_get_contents($path));
+		foreach (['bower.json', 'package.json'] as $filename) {
+			foreach (Finder::findFiles($filename)->from($bowerDir) as $path => $file) {
+				$componentJson = Json::decode(file_get_contents($path));
 
-			$fullPath = function($s) use ($path) {
-				return pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . $s;
-			};
+				$fullPath = function($s) use ($path) {
+					return pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . $s;
+				};
 
-			$packages[$componentJson->name] =
-			$packages[pathinfo(pathinfo($path, PATHINFO_DIRNAME), PATHINFO_BASENAME)] = array_filter(
-				array(
-					"css" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateCss)),
-					"js" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateJs)),
-					"extends" => array_values(array_flip(@(array)$componentJson->dependencies)),
-				), function ($a) {
-					return (!empty($a));
-				}
-			);
+				$tmp = array_filter(
+					array(
+						"css" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateCss)),
+						"js" => array_map($fullPath, array_filter(@(array)$componentJson->main, $separateJs)),
+						"extends" => array_values(array_flip(@(array)$componentJson->dependencies)),
+					), function ($a) {
+						return (!empty($a));
+					}
+				);
+
+				if (!empty($tmp))
+					foreach (array_filter(array_unique([$componentJson->name, pathinfo(pathinfo($path, PATHINFO_DIRNAME), PATHINFO_BASENAME)])) as $name)
+						if (!isset($packages[$name]))
+							$packages[$name] = $tmp;
+			}
 		}
 		return $packages;
 	}
