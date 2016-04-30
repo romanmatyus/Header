@@ -5,6 +5,7 @@ use Nette\Object;
 use Nette\FileNotFoundException;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Finder;
+use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
 /**
@@ -237,7 +238,7 @@ class AssetsCollector extends Object
 	public function getCss()
 	{
 		if ($this->mergeFiles)
-			$this->css = array($this->mergeFiles($this->css,self::CSS));
+			$this->mergeFiles(self::CSS);
 		$css_output = array();
 		foreach ($this->css as $source => $temp) {
 			$css_output[] = $temp;
@@ -252,7 +253,7 @@ class AssetsCollector extends Object
 	public function getJs()
 	{
 		if ($this->mergeFiles)
-			$this->js = array($this->mergeFiles($this->js,self::JS));
+			$this->mergeFiles(self::JS);
 		$js_output = array();
 		foreach ($this->js as $source => $temp) {
 			$js_output[] = $temp;
@@ -451,18 +452,33 @@ class AssetsCollector extends Object
 	 * @param	type string type of files self::CSS or self::JS
 	 * @return	path of merged files
 	 */
-	public function mergeFiles(array $files, $type)
+	public function mergeFiles($type)
 	{
 		$content = "";
 
-		foreach ($files as $file)
-			$content .= file_get_contents($_SERVER['DOCUMENT_ROOT'].$file);
+		foreach ($this->$type as $id => $file) {
+			if (!Validators::isUrl($file)) {
+				$tmp = file_get_contents($_SERVER['DOCUMENT_ROOT'].$file);
+				$content .= $tmp;
+
+				if ($type === self::JS) {
+					// FIX bug, if included script has not semicolon on end of file and it's ()() function.
+					if (Strings::endsWith(Strings::trim($tmp), ")")) {
+						$content .= ";";
+					}
+					$content .= "\n";
+				}
+
+				unset($this->{$type}[$id]);
+			}
+		}
 
 		$fileNameOutput = md5($content).".".$type;
 
 		if (!file_exists($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput))
 			file_put_contents($this->webTemp.DIRECTORY_SEPARATOR.$fileNameOutput,$content);
 
-		return substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
+		$this->{$type}[] = substr(realpath($this->webTemp),strlen(realpath($this->wwwDir))).DIRECTORY_SEPARATOR.$fileNameOutput;
+		return $this;
 	}
 }
