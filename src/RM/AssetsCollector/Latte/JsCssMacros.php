@@ -20,10 +20,10 @@ class JsCssMacros extends MacroSet
 	public static function install(Compiler $compiler)
 	{
 		$macroSet = new static($compiler);
-		$macroSet->addMacro('css', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCss(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('js', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJs(%node.array,dirname(($presenter->template->getFile()===$template->getFile())?$presenter->template->getFile():$template->getFile()));');
-		$macroSet->addMacro('pack', '$presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addPackages(%node.array)');
-		$macroSet->addMacro('cssContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCssContent($content,__DIR__);');
-		$macroSet->addMacro('jsContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); $presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJsContent($content,__DIR__);');
+		$macroSet->addMacro('css', 'echo "<!-- assets: " . \Nette\Utils\Json::encode($presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCss(%node.array,dirname(($presenter->template->getFile()===$template->getName())?$presenter->template->getFile():$template->getName()))) . " -->";');
+		$macroSet->addMacro('js', 'echo "<!-- assets: " . \Nette\Utils\Json::encode($presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJs(%node.array, dirname(($presenter->template->getFile()===$template->getName())?$presenter->template->getFile():$template->getName()))) . " -->";');
+		$macroSet->addMacro('pack', 'echo "<!-- assets: " . \Nette\Utils\Json::encode($presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addPackages(%node.array)) . " -->"');
+		$macroSet->addMacro('cssContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); echo "<!-- assets: " . \Nette\Utils\Json::encode($presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addCssContent($content,__DIR__)) . " -->";');
+		$macroSet->addMacro('jsContent', 'ob_start()','$content = ob_get_contents(); ob_end_clean(); echo "<!-- assets: " . \Nette\Utils\Json::encode($presenter->getContext()->getByType(\'RM\\AssetsCollector\\AssetsCollector\')->addJsContent($content,__DIR__)) . " -->";');
 	}
 }

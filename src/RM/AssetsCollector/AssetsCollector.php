@@ -70,20 +70,21 @@ class AssetsCollector extends Object
 	 */
 	public function addCss($file,$dir=null)
 	{
+		$files = [];
 		if (is_string($file)) {
 			$f = self::findFile($file,array($this->cssPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 			if (!in_array($fileNameOutput,$this->css))
-				$this->css[] = $fileNameOutput;
+				$this->css[] = $files[] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->cssPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 				if (!in_array($fileNameOutput,$this->css))
-					$this->css[] = $fileNameOutput;
+					$this->css[] = $files[] = $fileNameOutput;
 			}
 		}
-		return $this;
+		return $files;
 	}
 
 	/**
@@ -94,20 +95,21 @@ class AssetsCollector extends Object
 	 */
 	public function addJs($file,$dir=null)
 	{
+		$files = [];
 		if (is_string($file)) {
 			$f = self::findFile($file,array($this->jsPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::JS);
 			if (!in_array($fileNameOutput,$this->js))
-				$this->js[] = $fileNameOutput;
+				$this->js[] = $files[] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->jsPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::JS);
 				if (!in_array($fileNameOutput,$this->js))
-					$this->js[] = $fileNameOutput;
+					$this->js[] = $files[] = $fileNameOutput;
 			}
 		}
-		return $this;
+		return $files;
 	}
 
 	/**
@@ -117,10 +119,11 @@ class AssetsCollector extends Object
 	 */
 	public function addCssContent($content,$dir=null)
 	{
+		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::CSS);
 		if (!in_array($fileNameOutput,$this->css))
-			$this->css[] = $fileNameOutput;
-		return $this;
+			$this->css[] = $files[] = $fileNameOutput;
+		return $files;
 	}
 
 	/**
@@ -131,10 +134,11 @@ class AssetsCollector extends Object
 	 */
 	public function addJsContent($content,$dir=null)
 	{
+		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::JS);
 		if (!in_array($fileNameOutput,$this->js))
-			$this->js[] = $fileNameOutput;
-		return $this;
+			$this->js[] = $files[] = $fileNameOutput;
+		return $files;
 	}
 
 	/**
@@ -390,14 +394,16 @@ class AssetsCollector extends Object
 	 */
 	public function addPackage($package)
 	{
+		$files = [];
 		$this->usedPackages[] = $package;
 		$dependecies = $this->getDependecies($package);
 		if(!empty($dependecies['css']))
 			foreach ($dependecies['css'] as $css)
-				$this->addCss($css);
+				$files = array_merge($files, $this->addCss($css));
 		if(!empty($dependecies['js']))
 			foreach ($dependecies['js'] as $js)
-				$this->addJs($js);
+				$files = array_merge($files, $this->addJs($js));
+		return $files;
 	}
 
 	/**
@@ -436,14 +442,15 @@ class AssetsCollector extends Object
 	 */
 	public function addPackages($packages)
 	{
+		$files = [];
 		if (is_string($packages)) {
-			$this->addPackage($packages);
+			$files = array_merge($files, $this->addPackage($packages));
 		} elseif (is_array($packages)) {
 			foreach ($packages as $package) {
-				$this->addPackage($package);
+				$files = array_merge($files, $this->addPackage($package));
 			}
 		}
-		return $this;
+		return $files;
 	}
 
 	/**
