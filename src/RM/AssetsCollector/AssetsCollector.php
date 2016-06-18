@@ -75,13 +75,13 @@ class AssetsCollector extends Object
 			$f = self::findFile($file,array($this->cssPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 			if (!in_array($fileNameOutput,$this->css))
-				$this->css[] = $files[] = $fileNameOutput;
+				$this->css[] = $files[self::CSS][] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->cssPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 				if (!in_array($fileNameOutput,$this->css))
-					$this->css[] = $files[] = $fileNameOutput;
+					$this->css[] = $files[self::CSS][] = $fileNameOutput;
 			}
 		}
 		return $files;
@@ -100,13 +100,13 @@ class AssetsCollector extends Object
 			$f = self::findFile($file,array($this->jsPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::JS);
 			if (!in_array($fileNameOutput,$this->js))
-				$this->js[] = $files[] = $fileNameOutput;
+				$this->js[] = $files[self::JS][] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->jsPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::JS);
 				if (!in_array($fileNameOutput,$this->js))
-					$this->js[] = $files[] = $fileNameOutput;
+					$this->js[] = $files[self::JS][] = $fileNameOutput;
 			}
 		}
 		return $files;
@@ -122,7 +122,7 @@ class AssetsCollector extends Object
 		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::CSS);
 		if (!in_array($fileNameOutput,$this->css))
-			$this->css[] = $files[] = $fileNameOutput;
+			$this->css[] = $files[self::CSS][] = $fileNameOutput;
 		return $files;
 	}
 
@@ -137,7 +137,7 @@ class AssetsCollector extends Object
 		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::JS);
 		if (!in_array($fileNameOutput,$this->js))
-			$this->js[] = $files[] = $fileNameOutput;
+			$this->js[] = $files[self::JS][] = $fileNameOutput;
 		return $files;
 	}
 
@@ -399,10 +399,14 @@ class AssetsCollector extends Object
 		$dependecies = $this->getDependecies($package);
 		if(!empty($dependecies['css']))
 			foreach ($dependecies['css'] as $css)
-				$files = array_merge($files, $this->addCss($css));
+				$files = array_merge_recursive($files, $this->addCss($css));
 		if(!empty($dependecies['js']))
 			foreach ($dependecies['js'] as $js)
-				$files = array_merge($files, $this->addJs($js));
+				$files = array_merge_recursive($files, $this->addJs($js));
+
+		foreach ($files as $type => $set)
+			$files[$type] = array_unique($set);
+
 		return $files;
 	}
 
