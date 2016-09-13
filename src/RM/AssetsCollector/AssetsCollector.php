@@ -115,30 +115,28 @@ class AssetsCollector extends Object
 	/**
 	 * Add CSS files to header from plain entry.
 	 * @param	content string
-	 * @return	AssetsCollector
+	 * @return	array
 	 */
 	public function addCssContent($content,$dir=null)
 	{
-		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::CSS);
 		if (!in_array($fileNameOutput,$this->css))
-			$this->css[] = $files[self::CSS][] = $fileNameOutput;
-		return $files;
+			$this->css[] = $fileNameOutput;
+		return [self::CSS => [$fileNameOutput]];
 	}
 
 	/**
 	 * Add JS files to header from plain entry.
 	 * @param	content string
 	 * @param	dirs null|array where searches
-	 * @return	AssetsCollector
+	 * @return	array
 	 */
 	public function addJsContent($content,$dir=null)
 	{
-		$files = [];
 		$fileNameOutput = $this->getTempFromContent($content,$dir=null,self::JS);
 		if (!in_array($fileNameOutput,$this->js))
-			$this->js[] = $files[self::JS][] = $fileNameOutput;
-		return $files;
+			$this->js[] = $fileNameOutput;
+		return [self::JS => [$fileNameOutput]];
 	}
 
 	/**
