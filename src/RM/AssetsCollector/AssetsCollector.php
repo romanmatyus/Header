@@ -66,7 +66,7 @@ class AssetsCollector extends Object
 	 * Add css files to header.
 	 * @param	file string|array
 	 * @param	dir null|string dir for find file by relative path
-	 * @return	AssetsCollector
+	 * @return	array
 	 */
 	public function addCss($file,$dir=null)
 	{
@@ -75,13 +75,15 @@ class AssetsCollector extends Object
 			$f = self::findFile($file,array($this->cssPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 			if (!in_array($fileNameOutput,$this->css))
-				$this->css[] = $files[self::CSS][] = $fileNameOutput;
+				$this->css[] = $fileNameOutput;
+			$files[self::CSS][] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->cssPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::CSS);
 				if (!in_array($fileNameOutput,$this->css))
-					$this->css[] = $files[self::CSS][] = $fileNameOutput;
+					$this->css[] = $fileNameOutput;
+				$files[self::CSS][] = $fileNameOutput;
 			}
 		}
 		return $files;
@@ -91,7 +93,7 @@ class AssetsCollector extends Object
 	 * Add js files to header.
 	 * @param	file string|array
 	 * @param	dir null|string direcory for find file by relative path
-	 * @return	AssetsCollector
+	 * @return	array
 	 */
 	public function addJs($file,$dir=null)
 	{
@@ -100,13 +102,15 @@ class AssetsCollector extends Object
 			$f = self::findFile($file,array($this->jsPath,$dir));
 			$fileNameOutput = $this->getTempFromFile($f,self::JS);
 			if (!in_array($fileNameOutput,$this->js))
-				$this->js[] = $files[self::JS][] = $fileNameOutput;
+				$this->js[] = $fileNameOutput;
+			$files[self::JS][] = $fileNameOutput;
 		} elseif (is_array($file)) {
 			foreach ($file as $item) {
 				$f = self::findFile($item,array($this->jsPath,$dir));
 				$fileNameOutput = $this->getTempFromFile($f,self::JS);
 				if (!in_array($fileNameOutput,$this->js))
-					$this->js[] = $files[self::JS][] = $fileNameOutput;
+					$this->js[] = $fileNameOutput;
+				$files[self::JS][] = $fileNameOutput;
 			}
 		}
 		return $files;
