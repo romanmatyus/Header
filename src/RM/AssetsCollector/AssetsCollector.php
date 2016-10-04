@@ -338,7 +338,7 @@ class AssetsCollector extends Object
 			$name = explode("\\",get_class($compiler));
 			$name = lcfirst(array_pop($name));
 			if ($compiler instanceof \RM\AssetsCollector\Compilers\IAssetsCompiler)
-				$this->cssCompiler[$name] = callback($compiler, 'compile');
+				$this->cssCompiler[$name] = [$compiler, 'compile'];
 			else
 				throw new InvalidArgumentException("Compiler must be instance of \RM\AssetsCollector\Compilers\IAssetsCompiler");
 		}
@@ -354,7 +354,7 @@ class AssetsCollector extends Object
 			$name = explode("\\",get_class($compiler));
 			$name = lcfirst(array_pop($name));
 			if ($compiler instanceof \RM\AssetsCollector\Compilers\IAssetsCompiler)
-				$this->jsCompiler[$name] = callback($compiler, 'compile');
+				$this->jsCompiler[$name] = [$compiler, 'compile'];
 			else
 				throw new InvalidArgumentException("Compiler must be instance of \RM\AssetsCollector\Compilers\IAssetsCompiler");
 		}
