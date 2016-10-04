@@ -52,6 +52,9 @@ class Header extends Control
 	const TEXT_HTML = 'text/html';
 	const APPLICATION_XHTML = 'application/xhtml+xml';
 
+	/** @var string */
+	public $appDir;
+
 	/** @var string doctype */
 	private $docType;
 
@@ -88,7 +91,7 @@ class Header extends Control
 	/** @var bool whether XML content type should be forced or not */
 	private $forceContentType;
 
-	/** @var string path to favicon (without $basePath) */
+	/** @var IIcon */
 	private $favicon;
 
 	/** @var RM\AssetsCollector\AssetsCollector */
@@ -100,18 +103,19 @@ class Header extends Control
 	/** @var Nette\Http\Response */
 	private $response;
 
-	public function __construct(AssetsCollector $assetsCollector, Request $request, Response $response)
+	/** @var IIconFactory */
+	private $iconFactory;
+
+
+	public function __construct(AssetsCollector $assetsCollector, Request $request, Response $response, IIconFactory $iconFactory = NULL)
 	{
 		$this->assetsCollector = $assetsCollector;
 		$this->request = $request;
 		$this->response = $response;
+		$this->iconFactory = $iconFactory;
 
 		$this->setDocType(self::HTML_5);
 		$this->setContentType(self::TEXT_HTML);
-
-		try {
-			$this->setFavicon('/favicon.ico');
-		} catch (FileNotFoundException $e) {}
 	}
 
 	/**
@@ -288,13 +292,19 @@ class Header extends Control
 	 */
 	public function setFavicon($filename)
 	{
-		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $filename)) {
-			$this->favicon = $filename;
-		} else {
-			throw new FileNotFoundException('Favicon ' . $_SERVER['DOCUMENT_ROOT'] . $filename . ' not found.');
+		foreach ([
+				$filename,
+				__DIR__ . DIRECTORY_SEPARATOR . $filename,
+				$_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $filename,
+			] as $path) {
+			if (file_exists($path)) {
+				$this->favicon = ($this->iconFactory instanceof IIconFactory)
+					? $this->iconFactory->create(realpath($path))->setTitle((string) $this->getTitle())
+					: realpath($path);
+				return $this;
+			}
 		}
-
-		return $this; //fluent interface
+		throw new FileNotFoundException('Favicon ' . $_SERVER['DOCUMENT_ROOT'] . $filename . ' not found.');
 	}
 
 	public function getFavicon()
@@ -486,9 +496,17 @@ class Header extends Control
 
 		echo Html::el('title', $this->getTitleString()) . "\n";
 
-		if ($this->favicon != '') {
+		if ($this->favicon === NULL) {
+			try {
+				$this->setFavicon('/favicon.ico');
+			} catch (FileNotFoundException $e) {}
+		}
+
+		if (is_string($this->favicon)) {
 			echo Html::el('link')->rel('shortcut icon')
 					->href($this->favicon) . "\n";
+		} elseif ($this->favicon instanceof IIcon) {
+			echo $this->favicon;
 		}
 
 		foreach ($this->metaTags as $name=>$content) {
