@@ -1,7 +1,6 @@
 {
 	"name": "rm/header",
 	"type": "library",
-	"version": "0.2.2",
 	"description": "Component for generating beuty and corect html header with only files where are realy required.",
 	"homepage": "https://github.com/romanmatyus/Header",
 	"license": ["MIT"],
