@@ -82,6 +82,9 @@ class Header extends Control
 	/** @var array header meta tags */
 	private $metaTags = array();
 
+	/** @var array */
+	private $afterHeadStart = [];
+
 	/** @var Html &lt;html&gt; tag */
 	private $htmlTag;
 
@@ -238,6 +241,13 @@ class Header extends Control
 		} else {
 			return $this->title;
 		}
+	}
+
+	public function addAfterHeadStart(string $snippet)
+	{
+		$this->afterHeadStart[] = $snippet;
+
+		return $this;
 	}
 
 	public function addRssChannel($title, $link)
@@ -481,6 +491,10 @@ class Header extends Control
 		echo $this->getHtmlTag()->startTag() . "\n";
 
 		echo Html::el('head')->startTag() . "\n";
+
+		foreach ($this->afterHeadStart as $snippet) {
+			echo $snippet . "\n";
+		}
 
 		if ($this->docType != self::HTML_5) {
 			$metaLanguage = Html::el('meta');
